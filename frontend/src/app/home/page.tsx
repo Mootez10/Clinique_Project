@@ -2,16 +2,16 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function DashboardPage() {
+export default function HomePage() {
   return (
-    <div className="p-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="p-10 grid gap-6">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>⚙️ Admin Dashboard</CardTitle>
+          <CardTitle>🏠 Patient Home</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-lg">Welcome, Admin.</p>
-          <p className="text-sm text-gray-500">Here you can manage doctors, receptionists, and clinic settings.</p>
+          <p className="text-lg">Welcome to your portal.</p>
+          <p className="text-sm text-gray-500">Here you will see your appointments, prescriptions, and invoices.</p>
         </CardContent>
       </Card>
 
@@ -21,9 +21,9 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
           <ul className="space-y-2 text-blue-600">
-            <li>➕ Add Doctor</li>
-            <li>➕ Add Receptionist</li>
-            <li>⚙️ Configure Services</li>
+            <li>📅 Book Appointment</li>
+            <li>📄 Download Prescription</li>
+            <li>💳 View Invoices</li>
           </ul>
         </CardContent>
       </Card>
