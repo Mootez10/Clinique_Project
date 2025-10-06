@@ -20,10 +20,9 @@ export default function HomePage() {
     {/* Navigation */}
     <nav className="hidden md:flex space-x-8 font-medium text-white">
       <Link href="#home" className="hover:text-cyan-300 transition">Home</Link>
-      <Link href="#about" className="hover:text-cyan-300 transition">About</Link>
-      <Link href="#blog" className="hover:text-cyan-300 transition">Blog</Link>
-      <Link href="#pages" className="hover:text-cyan-300 transition">Pages</Link>
-      <Link href="#contact" className="hover:text-cyan-300 transition">Contact</Link>
+      <Link href="about" className="hover:text-cyan-300 transition">About</Link>
+      <Link href="departments" className="hover:text-cyan-300 transition">Pages</Link>
+      <Link href="contact" className="hover:text-cyan-300 transition">Contact</Link>
     </nav>
 
     {/* CTA Button */}
