@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Doctor } from "./entities/doctor.entity";
 import { Patient } from "./entities/patient.entity";
@@ -15,16 +15,19 @@ export class UsersService {
     @InjectRepository(Patient) private readonly patientRepo: Repository<Patient>,
     @InjectRepository(Doctor) private readonly doctorRepo: Repository<Doctor>,
   ) { }
-  async getUsers(role?: userRole) {
-    if (role === userRole.ADMIN) return this.adminRepo.find();
-    if (role === userRole.RECEP) return this.recepRepo.find();
-    if (role === userRole.PATIENT) return this.patientRepo.find();
-    if (role === userRole.DOCTOR) return this.doctorRepo.find();
+  async getUsers(role?: userRole , ids?: string[]) {
+    const where ={
+      where: (ids &&{ id: In(ids) } ),
+    };
+    if (role === userRole.ADMIN || role === userRole.SUPER_ADMIN) return this.adminRepo.find(where);
+    if (role === userRole.RECEP) return this.recepRepo.find(where);
+    if (role === userRole.PATIENT) return this.patientRepo.find(where);
+    if (role === userRole.DOCTOR) return this.doctorRepo.find(where);
     return [
-      ...(await this.adminRepo.find()),
-      ...(await this.recepRepo.find()),
-      ...(await this.patientRepo.find()),
-      ...(await this.doctorRepo.find()),
+      ...(await this.adminRepo.find(where)),
+      ...(await this.recepRepo.find(where)),
+      ...(await this.patientRepo.find(where)),
+      ...(await this.doctorRepo.find(where)),
     ]
   }
   async createReceptionist(userDto: CreateUserDto) {
@@ -66,7 +69,7 @@ export class UsersService {
     return savedUser;
   }
   async findByEmail(email: string, role: userRole) {
-    if (role === userRole.ADMIN) return await this.adminRepo.findOne({ where: { email } });
+    if (role === userRole.ADMIN || userRole.SUPER_ADMIN) return await this.adminRepo.findOne({ where: { email } });
     if (role === userRole.RECEP) return await this.recepRepo.findOne({ where: { email } });
     if (role === userRole.PATIENT) return await this.patientRepo.findOne({ where: { email } });
     if (role === userRole.DOCTOR) return await this.doctorRepo.findOne({ where: { email } });
@@ -75,7 +78,7 @@ export class UsersService {
 
   async findUserById(id: string, role: userRole) {
     let user: Admin | Receptionist | Patient | Doctor | null = null;
-    if (role === userRole.ADMIN) user = await this.adminRepo.findOne({ where: { id } });
+    if (role === userRole.ADMIN || userRole.SUPER_ADMIN ) user = await this.adminRepo.findOne({ where: { id } });
     if (role === userRole.RECEP) user = await this.recepRepo.findOne({ where: { id } });
     if (role === userRole.PATIENT) user = await this.patientRepo.findOne({ where: { id } });
     if (role === userRole.DOCTOR) user = await this.doctorRepo.findOne({ where: { id } });
@@ -85,11 +88,13 @@ export class UsersService {
   async deleteUserById(id: string, role: userRole) {
     const user = await this.findUserById(id, role);
     let result;
-    if (role === userRole.ADMIN) result = await this.adminRepo.delete(id);
+    if (role === userRole.ADMIN || userRole.SUPER_ADMIN) result = await this.adminRepo.delete(id);
     if (role === userRole.RECEP) result = await this.recepRepo.delete(id);
     if (role === userRole.PATIENT) result = await this.patientRepo.delete(id);
     if (role === userRole.DOCTOR) result = await this.doctorRepo.delete(id);
     if (result?.affected === 0) throw new NotFoundException("User with this id does not exist");
     return { message: `${role} deleted successfully` };
   }
+
+
 }
