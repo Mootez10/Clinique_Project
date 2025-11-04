@@ -748,7 +748,7 @@ export default function PrescriptionManagementPage() {
                   className="bg-slate-700 hover:bg-slate-800 text-white rounded-md shadow-sm flex-1 py-3 font-semibold transition-colors duration-200"
                 >
                   <FileText className="h-5 w-5 mr-2" />
-                  Enregistrer l'ordonnance
+                  Enregistrer Ordonnance
                 </Button>
                 <Button 
                   variant="outline"
