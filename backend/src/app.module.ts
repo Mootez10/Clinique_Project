@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CliniqueModule } from './clinique/clinique.module';
 import { ConsultationsModule } from './consultations/consultations.module';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
+import { AgendaModule } from './agenda/agenda.module';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module';
     CliniqueModule,
     ConsultationsModule,
     PrescriptionsModule,
+    AgendaModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
