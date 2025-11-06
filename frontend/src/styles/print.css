@@ -1,0 +1,27 @@
+@media print {
+  /* Cache les éléments non nécessaires */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Force les couleurs */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Évite les sauts de page dans les éléments */
+  .prescription-item {
+    page-break-inside: avoid;
+  }
+
+  /* Marges de page */
+  @page {
+    margin: 2cm;
+  }
+
+  /* Police plus petite pour l'impression */
+  body {
+    font-size: 12pt;
+  }
+}
