@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, ParseEnumPipe, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseEnumPipe,
+    ParseUUIDPipe,
+    Post,
+    Query,
+    UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 
 import { CreateUserDto } from './dto/create-user';
@@ -18,7 +29,8 @@ export class UsersController {
     @Get(':role/:id')
     findUserById(
         @Param('id', ParseUUIDPipe) id: string,
-        @Param('role', new ParseEnumPipe(userRole)) role: userRole) {
+        @Param('role', new ParseEnumPipe(userRole)) role: userRole,
+    ) {
         return this.usersService.findUserById(id, role);
     }
 
@@ -49,9 +61,8 @@ export class UsersController {
     @Delete(':role/:id')
     deleteUserById(
         @Param('id', ParseUUIDPipe) id: string,
-        @Param('role', new ParseEnumPipe(userRole)) role: userRole) {
+        @Param('role', new ParseEnumPipe(userRole)) role: userRole,
+    ) {
         return this.usersService.deleteUserById(id, role);
     }
-
-
 }
