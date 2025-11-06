@@ -14,7 +14,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import Link from "next/link";
@@ -42,7 +49,7 @@ export default function LoginPage() {
     setServerError("");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`, {
+      const res = await fetch(`http://localhost:3001/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -57,14 +64,14 @@ export default function LoginPage() {
 
       const data = await res.json();
 
-      // Cas spécial : admin codé en dur
+      /*       // Cas spécial : admin codé en dur
       if (values.email === "admin@gmail.com" && values.password === "123456") {
         window.location.href = "/dashboard";
         return;
       }
-
+ */
       // Redirection selon le rôle
-      if (data.user?.role === "ADMIN") {
+      if (data.role === "admin") {
         window.location.href = "/dashboard";
       } else {
         window.location.href = "/home";
@@ -81,7 +88,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Connexion</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Connexion
+          </CardTitle>
           <CardDescription className="text-center">
             Entrez vos identifiants pour accéder à votre compte
           </CardDescription>
@@ -137,7 +146,11 @@ export default function LoginPage() {
                           className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 transition-colors"
                           disabled={isLoading}
                         >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </button>
                       </div>
                     </FormControl>
@@ -163,7 +176,10 @@ export default function LoginPage() {
                   />
                   <span className="text-slate-600">Se souvenir de moi</span>
                 </label>
-                <Link href="/auth/forgot-password" className="text-primary hover:underline">
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-primary hover:underline"
+                >
                   Mot de passe oublié ?
                 </Link>
               </div>
@@ -179,7 +195,10 @@ export default function LoginPage() {
         <CardFooter className="flex justify-center">
           <p className="text-sm text-slate-600">
             Pas encore de compte ?{" "}
-            <Link href="/auth/register" className="text-primary font-medium hover:underline">
+            <Link
+              href="/auth/register"
+              className="text-primary font-medium hover:underline"
+            >
               S&apos;inscrire
             </Link>
           </p>
