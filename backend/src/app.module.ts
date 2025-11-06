@@ -4,6 +4,8 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { CliniqueModule } from './clinique/clinique.module';
+import { ConsultationsModule } from './consultations/consultations.module';
+import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { CliniqueModule } from './clinique/clinique.module';
     UsersModule,
     AuthModule,
     CliniqueModule,
+    ConsultationsModule,
+    PrescriptionsModule,
   ],
   controllers: [],
   providers: [],
