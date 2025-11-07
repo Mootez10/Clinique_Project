@@ -27,9 +27,9 @@ export class UsersService {
     };
     if (role === userRole.ADMIN || role === userRole.SUPER_ADMIN)
       return this.adminRepo.find(where);
-    if (role === userRole.RECEP) return this.recepRepo.find(where);
+    if (role === userRole.RECEP) return this.recepRepo.find({ ...where, relations: { clinique: true } });
     if (role === userRole.PATIENT) return this.patientRepo.find(where);
-    if (role === userRole.DOCTOR) return this.doctorRepo.find(where);
+    if (role === userRole.DOCTOR) return this.doctorRepo.find({ ...where, relations: { clinique: true } });
     return [
       ...(await this.adminRepo.find(where)),
       ...(await this.recepRepo.find(where)),
@@ -123,11 +123,11 @@ export class UsersService {
     if (role === userRole.ADMIN || userRole.SUPER_ADMIN)
       user = await this.adminRepo.findOne({ where: { id } });
     if (role === userRole.RECEP)
-      user = await this.recepRepo.findOne({ where: { id } });
+      user = await this.recepRepo.findOne({ where: { id }, relations: { clinique: true } });
     if (role === userRole.PATIENT)
       user = await this.patientRepo.findOne({ where: { id } });
     if (role === userRole.DOCTOR)
-      user = await this.doctorRepo.findOne({ where: { id } });
+      user = await this.doctorRepo.findOne({ where: { id }, relations: { clinique: true } });
     if (!user)
       throw new NotFoundException(`${role} with this id does not exist`);
     return user;
@@ -143,5 +143,12 @@ export class UsersService {
     if (result?.affected === 0)
       throw new NotFoundException('User with this id does not exist');
     return { message: `${role} deleted successfully` };
+  }
+
+  async assignClinicToDoctor(userId: string) {
+    const user = await this.findUserById(userId, userRole.DOCTOR) as Doctor;
+  }
+  async assignClinicToReceptioniste(userId: string) {
+    const user = await this.findUserById(userId, userRole.RECEP) as Receptionist;
   }
 }

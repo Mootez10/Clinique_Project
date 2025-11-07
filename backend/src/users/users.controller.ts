@@ -19,7 +19,7 @@ import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { Roles } from 'src/shared/decorators/roles.decorator';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard, RolesGuard)
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
     @Get()
@@ -35,7 +35,7 @@ export class UsersController {
     }
 
     @Post('create-admin')
-    @Roles(userRole.SUPER_ADMIN)
+    @Roles()
     createAdmin(@Body() userDto: CreateUserDto) {
         return this.usersService.createAdmin(userDto);
     }

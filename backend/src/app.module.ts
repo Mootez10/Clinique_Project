@@ -24,4 +24,4 @@ import { AgendaModule } from './agenda/agenda.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

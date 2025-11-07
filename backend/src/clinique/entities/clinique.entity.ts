@@ -19,8 +19,8 @@ export class Clinique extends TimeStamEntity {
     email : string;
     @ManyToOne(() => Admin)
     addedby : Admin;
-    @OneToMany((type) => Receptionist, (recep) => recep.clinique)
+    @OneToMany(() => Receptionist, (recep) => recep.clinique)
     receptionists: Receptionist[];
-    @OneToMany((type) => Doctor, (doctor) => doctor.clinique)
+    @OneToMany(() => Doctor, (doctor) => doctor.clinique)
     doctors: Doctor[];
 }

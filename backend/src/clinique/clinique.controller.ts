@@ -11,9 +11,9 @@ import { CreateCliniqueDto } from './dto/create-clinique.dto';
 import { AssignUserCliniqueDto } from './dto/assignuser-clinique.dto';
 
 @Controller('clinique')
-@UseGuards(JwtAuthGuard,RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class CliniqueController {
-  constructor(private readonly cliniqueService: CliniqueService) {}
+  constructor(private readonly cliniqueService: CliniqueService) { }
 
   @Post()
   @Roles(userRole.SUPER_ADMIN, userRole.ADMIN)
@@ -21,7 +21,6 @@ export class CliniqueController {
     @Body() createCliniqueDto: CreateCliniqueDto,
     @CurrUser() user: LoggedUser,
   ) {
-    console.log('Logged User:', user);
     return this.cliniqueService.create(createCliniqueDto, user.id);
   }
 
@@ -36,7 +35,7 @@ export class CliniqueController {
   }
 
   @Get(':id')
-  findOne(@Param('id',ParseUUIDPipe) id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.cliniqueService.findOne(id);
   }
   @Patch("assign-user")
@@ -44,17 +43,19 @@ export class CliniqueController {
   assignUserToClinic(
     @Body() assignUserCliniqueDto: AssignUserCliniqueDto,
     @CurrUser() user: LoggedUser,
-  ) {}
+  ) {
+    return this.cliniqueService.assignUserToClinic(assignUserCliniqueDto);
+  }
 
   @Patch(':id')
   @Roles(userRole.SUPER_ADMIN, userRole.ADMIN)
-  update(@Param('id',ParseUUIDPipe) id: string, @Body() updateCliniqueDto: UpdateCliniqueDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateCliniqueDto: UpdateCliniqueDto) {
     return this.cliniqueService.update(id, updateCliniqueDto);
   }
 
   @Delete(':id')
   @Roles(userRole.SUPER_ADMIN, userRole.ADMIN)
-  remove(@Param('id',ParseUUIDPipe) id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.cliniqueService.remove(id);
   }
 
