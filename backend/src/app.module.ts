@@ -7,6 +7,7 @@ import { CliniqueModule } from './clinique/clinique.module';
 import { ConsultationsModule } from './consultations/consultations.module';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { AgendaModule } from './agenda/agenda.module';
+import { RdvModule } from './rdv/rdv.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AgendaModule } from './agenda/agenda.module';
     ConsultationsModule,
     PrescriptionsModule,
     AgendaModule,
+    RdvModule,
   ],
   controllers: [],
   providers: [],

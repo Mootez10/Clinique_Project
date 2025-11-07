@@ -12,5 +12,6 @@ import { Clinique } from './entities/clinique.entity';
   ],
   controllers: [CliniqueController],
   providers: [CliniqueService],
+  exports: [CliniqueService],
 })
-export class CliniqueModule {}
+export class CliniqueModule { }

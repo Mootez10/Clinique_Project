@@ -27,11 +27,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           database,
           autoLoadEntities: true, // 🔥 charge automatiquement Appointment
           synchronize: true,      // recrée les tables si besoin
-          logging: true,          // optionnel pour voir les requêtes SQL
+          // logging: true,          // optionnel pour voir les requêtes SQL
         };
       },
       inject: [ConfigService],
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
