@@ -23,7 +23,7 @@ export class RdvService {
     const start = moment().startOf('isoWeek').toDate();
     const end = moment().endOf('isoWeek').toDate();
     return await this.rdvRepository.find({
-      relations: { clinique: true, doctor: true, patient: true },
+      relations: { doctor: true, patient: true },
       where: {
         rdvDate: Between(start, end),
       },
@@ -34,7 +34,10 @@ export class RdvService {
     const clinic = await this.clinicSer.findOne(createRdvDto.cliniqueId);
     const patient = await this.usersService.findUserById(createRdvDto.patientId, userRole.PATIENT);
     const doctor = await this.usersService.findUserById(createRdvDto.doctorId, userRole.DOCTOR);
-    const receptionist = await this.usersService.findUserById(user.id, userRole.RECEP);
+    let receptionist
+    if (user.role === userRole.RECEP) {
+      receptionist = await this.usersService.findUserById(user.id, userRole.RECEP);
+    }
     const rdv = this.rdvRepository.create({
       clinique: clinic,
       patient: patient,
@@ -42,13 +45,14 @@ export class RdvService {
       receptionist: receptionist,
       rdvDate: new Date(createRdvDto.rdvDate),
       reason: createRdvDto.reason,
+      createdBy: user.role,
     });
     return await this.rdvRepository.save(rdv);
   }
   async findRDVById(id: string) {
     const rdv = await this.rdvRepository.findOne({
       where: { id: id },
-      relations: { clinique: true, doctor: true, patient: true },
+      relations: { doctor: true, patient: true },
     });
     if (!rdv) {
       throw new NotFoundException('Rdv not found');

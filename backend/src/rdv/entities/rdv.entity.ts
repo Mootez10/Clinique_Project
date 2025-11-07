@@ -3,6 +3,7 @@ import { TimeStamEntity } from "src/database/timestamp-entity";
 import { Doctor } from "src/users/entities/doctor.entity";
 import { Patient } from "src/users/entities/patient.entity";
 import { Receptionist } from "src/users/entities/receptioniste.entity";
+import { userRole } from "src/users/entities/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 export enum rdvStatus {
     PENDING = 'PENDING',
@@ -26,10 +27,16 @@ export class Rdv extends TimeStamEntity {
     doctor: Doctor;
     @ManyToOne(() => Clinique)
     clinique: Clinique;
-    @ManyToOne(() => Receptionist)
+    @ManyToOne(() => Receptionist, { nullable: true })
     receptionist: Receptionist;
     @Column()
     reason: string;
+    @Column({
+        type: 'enum',
+        enum: userRole,
+        default: userRole.RECEP,
+    })
+    createdBy: userRole;
     @Column({
         default: 25,
     })
