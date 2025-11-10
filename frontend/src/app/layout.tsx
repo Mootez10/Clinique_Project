@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
+import { AuthProvider } from "@/context/AuthContext";
+import { QueryProvider } from "../QueryProvider"; // Import ajouté
 import "./globals.css";
 import '@/styles/print.css';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,10 +35,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           transition-colors duration-300
         `}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {children}
-          <Toaster /> {/* Notifications globales */}
-        </ThemeProvider>
+        <QueryProvider> {/* QueryProvider ajouté ici */}
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <AuthProvider>
+              {children}
+              <Toaster />
+            </AuthProvider>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

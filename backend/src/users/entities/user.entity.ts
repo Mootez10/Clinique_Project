@@ -20,8 +20,9 @@ export class User extends TimeStamEntity {
     lastName: string;
     @Column({ unique: true })
     email: string;
-    @Column({ unique: true })
-    phone: number;
+   @Column({ unique: true, nullable: true })
+phone: string;
+
     @Column()
     password: string;
     @Column('enum', { enum: userRole })

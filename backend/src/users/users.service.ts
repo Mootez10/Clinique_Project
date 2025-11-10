@@ -107,16 +107,18 @@ export class UsersService {
     const savedUser = await this.doctorRepo.save(createdUser);
     return savedUser;
   }
-  async findByEmail(email: string) {
-    let user = await this.adminRepo.findOne({ where: { email } });
-    user ??= await this.recepRepo.findOne({ where: { email } });
-    user ??= await this.patientRepo.findOne({ where: { email } });
-    user ??= await this.doctorRepo.findOne({ where: { email } });
-    if (!user) {
-      throw new NotFoundException(`User with this email does not exist`);
-    }
-    return user;
+  // CORRECTION : La méthode findByEmail doit vérifier tous les types d'utilisateurs
+async findByEmail(email: string) {
+  let user = await this.adminRepo.findOne({ where: { email } });
+  user ??= await this.recepRepo.findOne({ where: { email } });
+  user ??= await this.patientRepo.findOne({ where: { email } });
+  user ??= await this.doctorRepo.findOne({ where: { email } });
+  
+  if (!user) {
+    throw new NotFoundException(`User with this email does not exist`);
   }
+  return user;
+}
 
   async findUserById(id: string, role: userRole) {
     let user: Admin | Receptionist | Patient | Doctor | null = null;

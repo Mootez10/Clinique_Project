@@ -18,12 +18,41 @@ export default function HomePage() {
     </Link>
 
     {/* Navigation */}
-    <nav className="hidden md:flex space-x-8 font-medium text-white">
-      <Link href="#home" className="hover:text-cyan-300 transition">Home</Link>
-      <Link href="about" className="hover:text-cyan-300 transition">About</Link>
-      <Link href="departments" className="hover:text-cyan-300 transition">Pages</Link>
-      <Link href="contact" className="hover:text-cyan-300 transition">Contact</Link>
-    </nav>
+    <nav className="hidden md:flex items-center space-x-6 font-medium text-white">
+  {/* Liens principaux */}
+  <Link href="#home" className="hover:text-cyan-300 transition">
+    Home
+  </Link>
+  <Link href="#about" className="hover:text-cyan-300 transition">
+    About
+  </Link>
+  <Link href="#departments" className="hover:text-cyan-300 transition">
+    Pages
+  </Link>
+  <Link href="#contact" className="hover:text-cyan-300 transition">
+    Contact
+  </Link>
+
+  {/* Séparateur visuel */}
+  <span className="h-6 w-px bg-white/30 mx-2"></span>
+
+  {/* Boutons d’authentification */}
+  <div className="flex items-center space-x-3">
+    <Link
+      href="/auth/login"
+      className="bg-cyan-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-cyan-700 transition"
+    >
+      Login
+    </Link>
+    <Link
+      href="/auth/register"
+      className="bg-white text-cyan-600 border border-cyan-600 px-4 py-2 rounded-xl font-semibold hover:bg-cyan-50 transition"
+    >
+      Register
+    </Link>
+  </div>
+</nav>
+
 
     {/* CTA Button */}
     <Button
