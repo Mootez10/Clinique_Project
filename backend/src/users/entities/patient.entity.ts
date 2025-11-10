@@ -12,5 +12,4 @@ export class Patient extends User {
   @Column({ nullable: true })
   bloodType: string;
 
-  // Ajoutez d'autres champs spécifiques au patient si nécessaire
 }
