@@ -4,6 +4,7 @@ import { Doctor } from "src/users/entities/doctor.entity";
 import { Receptionist } from "src/users/entities/receptioniste.entity";
 
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { MedicalService } from "src/medical-services/entities/medical-service.entity";
 
 @Entity()
 export class Clinique extends TimeStamEntity {
@@ -23,4 +24,8 @@ export class Clinique extends TimeStamEntity {
     receptionists: Receptionist[];
     @OneToMany(() => Doctor, (doctor) => doctor.clinique)
     doctors: Doctor[];
+    
+// Ajouter dans la classe Clinique
+@OneToMany(() => MedicalService, (service) => service.clinique)
+services: MedicalService[];
 }
