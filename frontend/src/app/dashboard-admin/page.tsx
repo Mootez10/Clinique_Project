@@ -222,16 +222,14 @@ export default function DashboardPage() {
               <Building className="mr-3 h-4 w-4" />
               Gestion des Cliniques
             </Button>
-            
             <Button 
-              variant={activeTab === 'services' ? 'default' : 'ghost'} 
+              variant={activeTab === 'clinics' ? 'default' : 'ghost'} 
               className="w-full justify-start"
-              onClick={() => setActiveTab('services')}
+              onClick={() => router.push('/medical-services')} 
             >
-              <Stethoscope className="mr-3 h-4 w-4" />
-              Services Médicaux
+              <Building className="mr-3 h-4 w-4" />
+                Services Médicaux
             </Button>
-            
             <Button 
               variant={activeTab === 'clinics' ? 'default' : 'ghost'} 
               className="w-full justify-start"

@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Edit, MapPin, Phone, Mail, Users, Stethoscope } from 'lucide-react';
+import { ArrowLeft, Edit, MapPin, Phone, Mail, Users, Stethoscope, Link } from 'lucide-react';
 import { cliniqueApi } from '@/lib/api/clinique';
 import { Clinique } from '@/types/clinique';
 import { Button } from '@/components/ui/button';
@@ -213,6 +213,13 @@ export default function CliniqueDetailPage() {
             </Button>
           </CardContent>
         </Card>
+        <Button
+  variant="outline"
+  onClick={() => router.push(`/medical-services?cliniqueId=${clinique.id}`)}
+>
+  <Link className="mr-2 h-4 w-4" />
+  Voir les services
+</Button>
       </div>
     </div>
   );
