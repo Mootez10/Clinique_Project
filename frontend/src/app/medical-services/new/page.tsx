@@ -29,8 +29,6 @@ export default function NewMedicalServicePage() {
   };
 
   return (
-    <div className="container mx-auto py-10 max-w-4xl">
-      <MedicalServiceForm onSubmit={handleSubmit} />
-    </div>
+    <MedicalServiceForm onSubmit={handleSubmit} />
   );
 }

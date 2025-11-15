@@ -6,7 +6,7 @@ class ApiService {
   private async fetchApi(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     
-    console.log('🔄 Making API request to:', url, options);
+    console.log('Making API request to:', url, options);
     
     try {
       const response = await fetch(url, {
@@ -18,19 +18,30 @@ class ApiService {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ API Error:', {
-          url,
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        throw new Error(`API error: ${response.status} ${response.statusText} - ${errorText}`);
+        let errorMessage = `API error: ${response.status} ${response.statusText}`;
+        
+        try {
+          const errorData = await response.json();
+          console.error('API Error details:', errorData);
+          
+          // Gestion spécifique des erreurs de validation
+          if (errorData.message && Array.isArray(errorData.message)) {
+            errorMessage = errorData.message.join(', ');
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (parseError) {
+          // Si la réponse n'est pas du JSON, utiliser le texte brut
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      return response.json();
+      return await response.json();
     } catch (error) {
-      console.error('💥 Network error:', error);
+      console.error('Network error:', error);
       throw error;
     }
   }
@@ -65,15 +76,19 @@ class ApiService {
       throw new Error(`No endpoint defined for role: ${userData.role}`);
     }
 
-    console.log('📤 Creating user with data:', userData);
+    console.log('Creating user with data:', userData);
+
+    // Nettoyer les données avant envoi
+    const cleanedData = {
+      ...userData,
+      phone: userData.phone ? userData.phone.replace(/\D/g, '') : undefined
+    };
 
     return this.fetchApi(endpoint, {
       method: 'POST',
-      body: JSON.stringify(userData),
+      body: JSON.stringify(cleanedData),
     });
   }
-
- 
 
   async deleteUser(id: string, role: UserRole): Promise<void> {
     await this.fetchApi(`/users/${role}/${id}`, {

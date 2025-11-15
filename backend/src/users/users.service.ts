@@ -11,6 +11,7 @@ import { Patient } from './entities/patient.entity';
 import { Admin } from './entities/admin.entity';
 import { Receptionist } from './entities/receptioniste.entity';
 import { userRole } from './entities/user.entity';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -21,6 +22,7 @@ export class UsersService {
     private readonly patientRepo: Repository<Patient>,
     @InjectRepository(Doctor) private readonly doctorRepo: Repository<Doctor>,
   ) { }
+
   async getUsers(role?: userRole, ids?: string[]) {
     const where = {
       where: ids && { id: In(ids) },
@@ -37,6 +39,7 @@ export class UsersService {
       ...(await this.doctorRepo.find(where)),
     ];
   }
+
   async createReceptionist(userDto: CreateUserDto) {
     const existed = await this.recepRepo.existsBy([
       { email: userDto.email },
@@ -90,6 +93,7 @@ export class UsersService {
     const savedUser = await this.adminRepo.save(createdUser);
     return savedUser;
   }
+
   async createDoctor(userDto: CreateUserDto) {
     const existed = await this.doctorRepo.existsBy([
       { email: userDto.email },
@@ -107,18 +111,31 @@ export class UsersService {
     const savedUser = await this.doctorRepo.save(createdUser);
     return savedUser;
   }
-  // CORRECTION : La méthode findByEmail doit vérifier tous les types d'utilisateurs
-async findByEmail(email: string) {
-  let user = await this.adminRepo.findOne({ where: { email } });
-  user ??= await this.recepRepo.findOne({ where: { email } });
-  user ??= await this.patientRepo.findOne({ where: { email } });
-  user ??= await this.doctorRepo.findOne({ where: { email } });
-  
-  if (!user) {
-    throw new NotFoundException(`User with this email does not exist`);
+
+  async findByEmail(email: string) {
+    let user = await this.adminRepo.findOne({ where: { email } });
+    user ??= await this.recepRepo.findOne({ where: { email } });
+    user ??= await this.patientRepo.findOne({ where: { email } });
+    user ??= await this.doctorRepo.findOne({ where: { email } });
+    
+    if (!user) {
+      throw new NotFoundException(`User with this email does not exist`);
+    }
+    return user;
   }
-  return user;
-}
+
+  // ✅ NOUVELLE MÉTHODE AJOUTÉE
+  async findUserByIdWithoutRole(id: string) {
+    let user = await this.adminRepo.findOne({ where: { id } });
+    user ??= await this.recepRepo.findOne({ where: { id } });
+    user ??= await this.patientRepo.findOne({ where: { id } });
+    user ??= await this.doctorRepo.findOne({ where: { id } });
+    
+    if (!user) {
+      throw new NotFoundException(`User with this id does not exist`);
+    }
+    return user;
+  }
 
   async findUserById(id: string, role: userRole) {
     let user: Admin | Receptionist | Patient | Doctor | null = null;
@@ -134,6 +151,7 @@ async findByEmail(email: string) {
       throw new NotFoundException(`${role} with this id does not exist`);
     return user;
   }
+
   async deleteUserById(id: string, role: userRole) {
     await this.findUserById(id, role);
     let result;
@@ -148,9 +166,10 @@ async findByEmail(email: string) {
   }
 
   async assignClinicToDoctor(userId: string) {
-    const user = await this.findUserById(userId, userRole.DOCTOR) as Doctor;
+    const user = await this.findUserByIdWithoutRole(userId) as Doctor;
   }
+
   async assignClinicToReceptioniste(userId: string) {
-    const user = await this.findUserById(userId, userRole.RECEP) as Receptionist;
+    const user = await this.findUserByIdWithoutRole(userId) as Receptionist;
   }
 }
