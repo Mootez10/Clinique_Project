@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Stethoscope, Building, Clock, DollarSign, FileText } from 'lucide-react';
 import { cliniqueApi } from '@/lib/api/clinique';
 import { Clinique } from '@/types/clinique';
 import { Button } from '@/components/ui/button';
@@ -35,6 +35,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -110,177 +111,259 @@ export function MedicalServiceForm({
     }
   };
 
+  const selectedClinicId = form.watch('cliniqueId');
+  const selectedClinic = cliniques.find(c => c.id === selectedClinicId);
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {isEditing ? 'Modifier le service' : 'Nouveau service médical'}
-        </CardTitle>
-        <CardDescription>
-          {isEditing
-            ? 'Modifiez les informations du service médical'
-            : 'Créez un nouveau service médical pour une clinique'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nom du service *</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Consultation générale"
-                      {...field}
-                      disabled={loading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description *</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Description détaillée du service médical..."
-                      className="min-h-[100px]"
-                      {...field}
-                      disabled={loading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prix (DT) *</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="50.00"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormDescription>Prix en dinars tunisiens</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Durée (minutes) *</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="30"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormDescription>Durée estimée du service</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 py-8">
+      <div className="container mx-auto max-w-4xl">
+        <Card className="bg-white border border-gray-200 shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <Stethoscope className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-bold text-gray-900">
+                  {isEditing ? 'Modifier le Service Médical' : 'Nouveau Service Médical'}
+                </CardTitle>
+                <CardDescription className="text-gray-600 mt-1">
+                  {isEditing
+                    ? 'Modifiez les informations du service médical existant'
+                    : 'Créez un nouveau service médical pour votre clinique'
+                  }
+                </CardDescription>
+              </div>
             </div>
+          </CardHeader>
 
-            <FormField
-              control={form.control}
-              name="cliniqueId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Clinique *</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={loading || loadingCliniques}
+          <CardContent className="p-6">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Colonne gauche */}
+                  <div className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                            <FileText className="h-4 w-4 text-blue-500" />
+                            <span>Nom du Service *</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Consultation générale, Radiologie, etc."
+                              {...field}
+                              disabled={loading}
+                              className="border-gray-300 focus:border-blue-500 transition-colors"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                            <FileText className="h-4 w-4 text-blue-500" />
+                            <span>Description *</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Description détaillée du service médical, procédures, etc."
+                              className="min-h-[120px] border-gray-300 focus:border-blue-500 transition-colors"
+                              {...field}
+                              disabled={loading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="cliniqueId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                            <Building className="h-4 w-4 text-green-500" />
+                            <span>Clinique *</span>
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={loading || loadingCliniques}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="border-gray-300 focus:border-blue-500 transition-colors">
+                                <SelectValue placeholder="Sélectionnez une clinique" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {cliniques.map((clinique) => (
+                                <SelectItem key={clinique.id} value={clinique.id}>
+                                  <div className="flex items-center space-x-2">
+                                    <Building className="h-4 w-4 text-gray-400" />
+                                    <span>{clinique.name}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {selectedClinic && (
+                            <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                              <p className="text-sm text-blue-800">
+                                <strong>Clinique sélectionnée :</strong> {selectedClinic.name}
+                              </p>
+                              {selectedClinic.address && (
+                                <p className="text-xs text-blue-600 mt-1">{selectedClinic.address}</p>
+                              )}
+                            </div>
+                          )}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Colonne droite */}
+                  <div className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                            <DollarSign className="h-4 w-4 text-green-500" />
+                            <span>Prix de consultation ($) *</span>
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type="number"
+                                step="0.01"
+                                placeholder="50.00"
+                                {...field}
+                                disabled={loading}
+                                className="border-gray-300 focus:border-blue-500 transition-colors pl-8"
+                              />
+                              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                            </div>
+                          </FormControl>
+                          <FormDescription className="text-gray-500">
+                            Prix 
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="duration"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                            <Clock className="h-4 w-4 text-blue-500" />
+                            <span>Durée (minutes) *</span>
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type="number"
+                                placeholder="30"
+                                {...field}
+                                disabled={loading}
+                                className="border-gray-300 focus:border-blue-500 transition-colors pl-8"
+                              />
+                              <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                            </div>
+                          </FormControl>
+                          <FormDescription className="text-gray-500">
+                            Durée estimée de la consultation en minutes
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {isEditing && (
+                      <FormField
+                        control={form.control}
+                        name="isActive"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border border-gray-200 p-4 bg-white">
+                            <div className="space-y-0.5">
+                              <FormLabel className="text-base font-medium text-gray-700">
+                                Service Actif
+                              </FormLabel>
+                              <FormDescription className="text-gray-500">
+                                Activez ou désactivez la disponibilité de ce service
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <div className="flex items-center space-x-3">
+                                <Badge 
+                                  variant={field.value ? "default" : "secondary"}
+                                  className={field.value 
+                                    ? "bg-green-100 text-green-800 border-green-200" 
+                                    : "bg-gray-100 text-gray-800 border-gray-200"
+                                  }
+                                >
+                                  {field.value ? 'Actif' : 'Inactif'}
+                                </Badge>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  disabled={loading}
+                                />
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Boutons d'action */}
+                <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.back()}
+                    disabled={loading}
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50 min-w-24"
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionnez une clinique" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {cliniques.map((clinique) => (
-                        <SelectItem key={clinique.id} value={clinique.id}>
-                          {clinique.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {isEditing && (
-              <FormField
-                control={form.control}
-                name="isActive"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        Service actif
-                      </FormLabel>
-                      <FormDescription>
-                        Désactivez le service pour le masquer temporairement
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
-
-            <div className="flex gap-4">
-              <Button
-                type="submit"
-                disabled={loading}
-                className="flex-1"
-              >
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isEditing ? 'Mettre à jour' : 'Créer le service'}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={loading}
-              >
-                Annuler
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+                    Annuler
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-blue-600 hover:bg-blue-700 text-white min-w-32 shadow-sm hover:shadow-md transition-all duration-200"
+                  >
+                    {loading ? (
+                      <div className="flex items-center space-x-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>{isEditing ? 'Mise à jour...' : 'Création...'}</span>
+                      </div>
+                    ) : (
+                      isEditing ? 'Mettre à jour' : 'Créer le service'
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

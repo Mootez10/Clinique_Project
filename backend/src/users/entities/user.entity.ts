@@ -10,6 +10,7 @@ export enum userRole {
     RECEP = 'receptionist',
     DOCTOR = 'doctor',
     PATIENT = 'patient',
+    RECEPTIONIST = "RECEPTIONIST",
 }
 export class User extends TimeStamEntity {
     @PrimaryGeneratedColumn('uuid')

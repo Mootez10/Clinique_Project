@@ -29,6 +29,7 @@ export interface Receptionist extends User {
 }
 
 export interface Clinique {
+  description: any;
   id: string;
   name: string;
   address: string;

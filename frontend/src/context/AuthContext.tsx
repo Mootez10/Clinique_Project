@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api';
-import type { AuthResponse, LoginDto, RegisterDto, User } from '@/types/auth';
+import { UserRole, type AuthResponse, type LoginDto, type RegisterDto, type User } from '@/types/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -62,7 +62,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         createdAt: response.createdAt,
         updatedAt: response.updatedAt,
       });
-      router.push('/dashboard');
+     if (response.role === UserRole.ADMIN || response.role === UserRole.SUPER_ADMIN) {
+  router.push('/dashboard-admin');
+} else {
+  router.push('/dashboard');
+}
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -92,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     apiClient.logout();
     setUser(null);
-    router.push('/login');
+    router.push('/home');
   };
 
   return (

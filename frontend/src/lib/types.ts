@@ -8,6 +8,9 @@ export enum UserRole {
 }
 
 export interface User {
+  isActive: boolean;
+  avatar: string | Blob | undefined;
+  createdAt: any;
   id: string;
   firstName: string;
   lastName: string;

@@ -9,6 +9,9 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { AgendaModule } from './agenda/agenda.module';
 import { RdvModule } from './rdv/rdv.module';
 import { MedicalServicesModule } from './medical-services/medical-services.module';
+import { EquipmentModule } from './equipment/equipment.module';
+import { MedicationsModule } from './medications/medications.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,6 +26,9 @@ import { MedicalServicesModule } from './medical-services/medical-services.modul
     AgendaModule,
     RdvModule,
     MedicalServicesModule,
+    EquipmentModule,
+    MedicationsModule
+ 
   ],
   controllers: [],
   providers: [],
